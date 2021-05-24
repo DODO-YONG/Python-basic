@@ -27,3 +27,11 @@ print("global g:", g)
 print(dir())    # globals
 # 내장 영역의 확인
 print("내장영역:", dir('__builtins__'))
+print(dir('istitle'))
+
+def f(a, b, *args, **kwd):
+    print(a,b)
+    print(args)
+    print(kwd)
+    
+f(10, 20, 30, 40, depth = 10, dimension = 3)
