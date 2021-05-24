@@ -25,12 +25,14 @@ def quiz_1():
 
     for i in range(len(students)):
         dict_total = 0
+        count = 0
         for n,s in students[i].items():
             if isinstance(s, int):
+                count += 1
                 dict_total += s
 
         students[i].update({"total": dict_total})
-        students[i].update({"average": round(dict_total/3,2)})
+        students[i].update({"average": round(dict_total/count,2)})
     print(students)
 if __name__ == "__main__":
     quiz_1()
