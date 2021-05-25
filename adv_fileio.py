@@ -50,11 +50,75 @@ def copy_binary():
     f_dest = open("./sample/rose-copy-flower.jpeg", "wb") #binary 모드
     f_dest.write(data)
     f_dest.close()
+import pickle
 
+def pickle_dump():
+    with open("./sample/player.bin", "wb") as f:
+        data = {"baseball" : 9}
+        pickle.dump(data, f)
+    print("덤프 완료!")
+
+def pickle_load():
+    # 객체 역직렬화 : 2진 데이터 -> 파이썬 객체로 복원
+    with open("./sample/player.bin", "rb") as f:
+        data = pickle.load(f)
+        print(data, type(data))
+    print("로드 완료")
+
+def pickle_dump_multi():
+    # dump 메서드를 중복 실행하면 여러 객체를 dump 할 수 있다.
+    with open("./sample/player.bin", "wb") as f:
+        pickle.dump({"baseball": 9}, f, 1) #프로토콜의 버전 명시 가능
+        pickle.dump({"basketball": 5}, f, pickle.HIGHEST_PROTOCOL) # 가장 최신 버전의 프로토콜 사용
+        pickle.dump({"soccer": 11}, f) # 프로토콜 버전 명시 안하면 -> 가장 최신 버전의 프로토콜 사용
+
+    print("중복 덤프 완료!")
+
+def pickle_load_multi():
+    # 파일 내부에 몇 개의 피클 객체가 저장되어 있는지 확인 어렵다
+    with open("./sample/player.bin", "rb") as f:
+        data_list = []
+        while True:
+            try:
+                data = pickle.load(f)
+            except EOFError:
+                break
+            data_list.append(data)
+        print(data_list)
+def slamdunk_read():
+    #sangbuk.csv
+    # 한 줄 단위로 읽어서 -> dict -> list 에 적재
+    # pickle에 덤프
+    players = []
+    with open("./sample/sangbuk.csv", "rt", encoding="UTF-8") as f:
+        while True:
+            line = f.readline()
+            if not line:
+                break
+            # 읽은 데이터를 사전화
+            # 정재
+            line = line.strip().replace(" ", "")
+            info = line.split(",")
+
+            member = {"name":info[0], "backno":info[1],
+                      "height":info[2], "position":info[3]}
+            players.append(member)
+        print(players)
+
+        # pickle에 덤프
+        with open("./sample/sangbuk_player.bin", "wb") as f:
+            pickle.dump(players, f)
+
+        print("피클 덤프 완료!")
 if __name__ == "__main__":
     # write01()
     # write02()
     # read01()
     # read02()
     # read03()
-    copy_binary()
+    # copy_binary()
+    # pickle_dump()
+    # pickle_load()
+    # pickle_dump_multi()
+    # pickle_load_multi()
+    slamdunk_read()
