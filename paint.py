@@ -71,7 +71,7 @@ def arith_oper_overriding():
 
     # int + Point
     p1 = Point(10, 20)
-    print(10 + p1)
+    print("int + Point:", 10 + p1)
 
     # 연습문제
     p1 = Point(10, 20)
@@ -85,6 +85,15 @@ def arith_oper_overriding():
     p2 = Point(10, 20)
 
     print("p1 == p2?", p1 == p2)
+
+
+if __name__ == "__main__":
+    # bound_class_method()
+    # unbound_class_method()
+    # class_member_test()
+    # test_lifecycle()
+    # test_print()
+    arith_oper_overriding()
 
 
 if __name__ == "__main__":
