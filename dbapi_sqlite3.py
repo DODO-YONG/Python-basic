@@ -49,15 +49,66 @@ def test_insert_data(db_file, name, category, region):
     # 익명 파라미터 바인딩
     sql = """INSERT INTO customer (name, category, region)
     VALUES(?, ?, ?)"""
-    res = conn.excute(sql,(name, category, region))
+    res = conn.execute(sql,(name, category, region))
 
     # INSERT, UPDATE, DELETE -> 영향 받은 레코드의 수 .rowcount로 반환된다
     print("{}개의 레코드가 영향을 받음".format(res.rowcount))
     conn.commit()
     conn.close()
 
+def test_delete_all(db_file):
+    conn = create_connection(db_file)
+    sql = "DELETE FROM customer"
+    res = conn.execute(sql)
+
+    print("{} 개의 레코드가 삭제됨".format(res.rowcount))
+    conn.commit()
+    conn.close()
+
+def test_select_data(db_file):
+    conn = create_connection(db_file)
+    with create_connection(db_file) as conn: # with 문 종료시 자동 close()
+        # select 쿼리 수행
+        sql = "SELECT * FROM customer"
+        cursor = conn.execute(sql)
+        # print(type(cursor))
+        # 결과 처리
+        print(cursor.fetchone())    # 1개
+        print(cursor.fetchmany(2))  # 현재 위치에서 2개
+        print(cursor.fetchall())    # 현재 커서위치에서 나머지
+
+def test_search_data(db_file):
+    conn = create_connection(db_file)
+
+    # 명명된 플레이스 홀더
+    #   플레이스 홀더에 : 키 로 명명 가능
+    #   데이터는 dict으로 전달
+    sql = """
+    SELECT name, category, region FROM customer
+    WHERE region=:region OR category=:category 
+    """
+    cursor = conn.execute(sql, {
+        "region": "부천",
+        "category": 2
+    })
+
+    for customer in cursor.fetchall():
+        print(customer)
+
+def test_insert_bulk_data(db_file):
+    # 테스트 데이터 여러개 Insert
+    test_delete_all(db_file)
+    test_insert_data(db_file, "둘리", 1, "부천")
+    test_insert_data(db_file, "고길동", 2, "부천")
+    test_insert_data(db_file, "성용", 2, "용인")
+    test_insert_data(db_file, "홍길동", 1, "서울")
+    test_insert_data(db_file, "이수만", 2, "서울")
 
 if __name__ == "__main__":
     db_file = "./database/mysqlite.db"
     # test_connection(db_file)
-    test_create_table(db_file)
+    # test_create_table(db_file)
+    # test_insert_data(db_file, '둘리', 2, '부천')
+    # test_insert_bulk_data(db_file)
+    # test_select_data(db_file)
+    test_search_data(db_file)
