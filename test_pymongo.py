@@ -77,13 +77,28 @@ def test_select_by_filter(filter={}, projection={}):
     for doc in docs:
         print(doc)
 
+def test_delete_by_filter(filter={}):
+    coll = test_collection()
+    xs = coll.delete_many(filter)
+    print(xs.deleted_count,"개의 레코드가 삭제!")
+import re   # 정규 표현식
 if __name__ == "__main__":
     # test_connect()
     # test_insert()
     # test_insert_many()
     # test_updates()
-    test_select_by_filter(projection={
-        "name": 1, "address": 1, "_id": 0
-    })
+    # test_select_by_filter(projection={
+    #     "name": 1, "address": 1, "_id": 0
+    # })
     # select * from 테이블 where 컬럼 like ->
     # 정규식을 이용, 패턴 전달
+    """db.pymongo.find({"name": /길동/},{"name":1, "_id":0})
+    """
+    # filter = re.compile(r"길동")
+    # test_select_by_filter({"name" : filter},
+    #                       {"name":1, "_id": 0})
+    # test_delete_by_filter({"address": "서울"})
+    # db.pymongo.delete({"adress": "서울"})
+    # 전체 문서 삭제
+    # db.pymongo.delete({})
+    test_delete_by_filter()
